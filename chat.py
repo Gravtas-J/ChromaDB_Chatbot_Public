@@ -1,10 +1,12 @@
 import chromadb
-from chromadb.config import Settings
+import chromadb
 import openai
 import yaml
 from time import time, sleep
 from uuid import uuid4
-
+from dotenv import load_dotenv
+import os
+import streamlit as st
 
 def save_yaml(filepath, data):
     with open(filepath, 'w', encoding='utf-8') as file:
@@ -50,26 +52,28 @@ def chatbot(messages, model="gpt-4", temperature=0):
             print(f'\n\nRetrying in {2 ** (retry - 1) * 5} seconds...')
             sleep(2 ** (retry - 1) * 5)
 
+def main():
 
-
-
-if __name__ == '__main__':
+    st.title("Chatbot GUI")
+    
+    user_input = st.text_input("You: ", "")
+    load_dotenv()
     # instantiate ChromaDB
     persist_directory = "chromadb"
-    chroma_client = chromadb.Client(Settings(persist_directory=persist_directory,chroma_db_impl="duckdb+parquet",))
+    chroma_client = chroma_client = chromadb.PersistentClient(path="persist_directory")
     collection = chroma_client.get_or_create_collection(name="knowledge_base")
 
 
     # instantiate chatbot
-    openai.api_key = open_file('key_openai.txt')
+    openai.api_key = os.getenv("OPENAI_API_KEY")
     conversation = list()
     conversation.append({'role': 'system', 'content': open_file('system_default.txt')})
     user_messages = list()
     all_messages = list()
     
-    while True:
+    if user_input:
         # get user input
-        text = input('\n\nUSER: ')
+        text = user_input
         user_messages.append(text)
         all_messages.append('USER: %s' % text)
         conversation.append({'role': 'user', 'content': text})
@@ -162,4 +166,8 @@ if __name__ == '__main__':
                 new_id = str(uuid4())
                 collection.add(documents=[a2],ids=[new_id])
                 save_file('db_logs/log_%s_split.txt' % time(), 'Split document %s, added %s:\n%s\n\n%s' % (kb_id, new_id, a1, a2))
-        chroma_client.persist()
+                # chroma_client.persist()
+        st.write(response)
+
+if __name__ == '__main__':
+    main()
