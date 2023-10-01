@@ -1,6 +1,0 @@
-- Name: Jesse
-- Profession: Software Developer
-- Interests: Code Optimization, Full Stack Development, AI, Learning new languages
-- Beliefs: Not specified
-- Plans: Improve current chatbot code, Aspire to become a Full Stack Developer, Studying French
-- Preference: Not specified

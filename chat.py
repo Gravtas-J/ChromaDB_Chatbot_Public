@@ -87,7 +87,7 @@ def main():
 
 
         # search KB, update default system
-        current_profile = open_file('user_profile.txt')
+        current_profile = open_file('user_profile.md')
         kb = 'No KB articles yet'
         if collection.count() > 0:
             results = collection.query(query_texts=[main_scratchpad], n_results=1)
@@ -119,7 +119,7 @@ def main():
         profile_conversation.append({'role': 'system', 'content': open_file('system_update_user_profile.txt').replace('<<UPD>>', current_profile).replace('<<WORDS>>', str(profile_length))})
         profile_conversation.append({'role': 'user', 'content': user_scratchpad})
         profile = chatbot(profile_conversation)
-        save_file('user_profile.txt', profile)
+        save_file('user_profile.md', profile)
 
 
         # update main scratchpad

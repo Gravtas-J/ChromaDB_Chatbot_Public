@@ -6,7 +6,7 @@
 
 
 # Ignore the specified file
-/user_profile.txt
+user_profile.txt
 
 
 # Byte-compiled / optimized / DLL files
@@ -170,3 +170,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 .pkl    
+user_profile.txt
+
+user_profile.md
