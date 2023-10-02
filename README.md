@@ -11,6 +11,8 @@ Public version of my ChromaDB chatbot that keeps track of user profile and histo
 ## Usage
 
 - Main chat client: `python chat.py`
+- GUI chat client: `GUI.py`
+- Evaluation GUI: `eval.py`
 - Take a look in your KB: `python chromadb_peek.py`
 
 ## Code Explanation
