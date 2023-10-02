@@ -173,3 +173,5 @@ cython_debug/
 user_profile.txt
 
 user_profile.md
+/chromadb/*
+.sqlite3
