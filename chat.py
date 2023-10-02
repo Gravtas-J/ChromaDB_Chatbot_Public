@@ -53,7 +53,7 @@ def chatbot(messages, model="gpt-4", temperature=0):
 
 def main():
 
-    st.title("Chatbot GUI")
+    st.title("MindTrack Interactive Journal")
     
     user_input = st.text_input("You: ", "")
     load_dotenv()
