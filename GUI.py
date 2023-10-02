@@ -165,7 +165,6 @@ def main():
                 new_id = str(uuid4())
                 collection.add(documents=[a2],ids=[new_id])
                 save_file('db_logs/log_%s_split.txt' % time(), 'Split document %s, added %s:\n%s\n\n%s' % (kb_id, new_id, a1, a2))
-                # chroma_client.persist()
         st.write(response)
 
 if __name__ == '__main__':
