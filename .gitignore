@@ -3,11 +3,16 @@
 /chat_logs/*
 /persist_directory/*
 /db_logs/*
+/chromadb/*
+/chromadb/913feba9-6d0d-4d77-9d18-439b3e0dc924/*
+
+
+
 
 
 # Ignore the specified file
 user_profile.txt
-
+/chromadb/913feba9-6d0d-4d77-9d18-439b3e0dc924/.bin
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -173,5 +178,6 @@ cython_debug/
 user_profile.txt
 
 user_profile.md
-/chromadb/*
-.sqlite3
+\chromadb\*
+/chromadb/chroma.sqlite3
+chromadb/chroma.sqlite3
