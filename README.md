@@ -15,23 +15,23 @@ MindTrack is an advanced interactive and reflective journaling system designed t
 - Evaluation GUI: `eval.py`
 - Take a look in your KB: `python chromadb_peek.py`
 
-## Code Explanation
+Features
+1. AI Agent
+The AI agent is the heart of MindTrack. It operates in two distinct modes:
 
-This Python script serves as the implementation of a chatbot that leverages the OpenAI's GPT-4 model. It additionally integrates the chatbot with a persistent knowledge base using the ChromaDB library. Here's an overview of how the different parts of the script function:
+Conversation Mode: In this mode, the AI agent engages with the user, fostering an interactive and reflective journaling experience. This mode is particularly useful for patients to articulate their feelings, thoughts, and daily experiences.
 
-1. **Utility Functions**: The script starts with several utility functions to handle file operations and to interact with OpenAI's API. These include functions for saving and opening files, and a function to run the chatbot, managing retries in case of exceptions.
-2. **Main Application**: The script's main operation is contained within a continuous loop (`while True:`), enabling continuous interaction with the user. This loop does the following:
-   - **Instantiates the ChromaDB client** for persistent storage and knowledge base management.
-   - **Initiates the chatbot** by loading OpenAI's API key and preparing a conversation list.
-   - **Captures user input** and adds it to the conversation list. The input is also logged in a separate file for record-keeping.
-   - **Searches the knowledge base** for relevant content based on the current conversation and updates the chatbot's default system message accordingly.
-   - **Generates a response** from the chatbot based on the conversation so far, which includes the updated default system message and the user's input.
-   - **Updates the user profile** based on the user's recent messages, using the chatbot's response as the updated profile.
-   - **Updates the knowledge base** with the most recent conversation, either adding a new entry or updating an existing entry. If an existing entry becomes too long, it's split into two separate entries.
+Evaluation Mode: Leveraging advanced machine learning algorithms, in this mode, the AI agent assesses the patient's progress based on their journal entries. It offers insights and trends that can be invaluable for mental health professionals to understand the trajectory of their patient's mental health journey.
 
-The script logs all interactions with the OpenAI API and updates to the knowledge base, providing a record of the chatbot's operations and aiding in debugging and optimization efforts. The use of the ChromaDB library allows for scalable storage and retrieval of the chatbot's knowledge base, accommodating a growing number of conversations and data points.
+2. Progress Tracking
+By combining both the conversational and evaluative capabilities of the AI agent, MindTrack offers a comprehensive progress tracking tool. This empowers mental health professionals to have a more detailed, data-driven approach to understanding and guiding their patient's progress.
 
-But seriously just look at the code, it's pretty straight forward. 
+#Future Functionality Goals 
+System Prompt: The system will initially prompt the user to decide if they wish to engage in a conversational journaling session or if they want to evaluate their progress. Depending on this choice, the AI agent will operate in either Conversation Mode or Evaluation Mode.
+
+Conversation Mode: Engage in a two-way interaction with the AI. The user can document their feelings, thoughts, and experiences, with the AI offering responsive and reflective feedback.
+
+Evaluation Mode: The AI will assess and analyze the past journal entries to offer insights, trends, and a general overview of the patient's progress. This data can then be reviewed by mental health professionals for a more informed approach to treatment.
 
 ## Contributing
 
