@@ -1,6 +1,6 @@
-# ChromaDB Chatbot
+# MindTrack-Interactive-Journal
 
-Public version of my ChromaDB chatbot that keeps track of user profile and historical topics. Should be mostly ready to go right out of the box. 
+MindTrack is an advanced interactive and reflective journaling system designed to assist mental health professionals in tracking their patients' progress. The core functionality of this system revolves around an AI agent which serves dual roles: Conversation and Evaluation.
 
 ## Setup
 
