@@ -64,7 +64,7 @@ if __name__ == '__main__':
     # instantiate chatbot
     openai.api_key = os.getenv("OPENAI_API_KEY")
     conversation = list()
-    conversation.append({'role': 'system', 'content': open_file('system_default.txt')})
+    conversation.append({'role': 'system', 'content': open_file('Relfexive_journal.md')})
     user_messages = list()
     all_messages = list()
     
