@@ -6,6 +6,9 @@ from uuid import uuid4
 from dotenv import load_dotenv
 import os
 import streamlit as st
+import glob
+
+
 
 def save_yaml(filepath, data):
     with open(filepath, 'w', encoding='utf-8') as file:
@@ -21,7 +24,42 @@ def open_file(filepath):
     with open(filepath, 'r', encoding='utf-8', errors='ignore') as infile:
         return infile.read()
 
+def combine_documents(chat_dir):
+    # Create a path for all text files in the specified directory
+    path = os.path.join(chat_dir, '*.txt')
 
+    # Initialize an empty string to hold all the content
+    combined_content = ''
+
+    # Use glob to get all the text files in the directory
+    for file in glob.glob(path):
+        with open(file, 'r', encoding='utf-8') as f:
+            # Read the content of the current file
+            content = f.read()
+
+            # Concatenate the content of the current file to the combined_content string
+            combined_content += content + '\n\n'  # Adding two newlines to separate content of different files
+        return combined_content
+
+def combine_documents(directory):
+    # Create a path for all text files in the specified directory
+    path = os.path.join(directory, '*.txt')
+
+    # Initialize an empty string to hold all the content
+    combined_content = ''
+
+    # Use glob to get all the text files in the directory
+    for file in glob.glob(path):
+        with open(file, 'r', encoding='utf-8') as f:
+            # Read the content of the current file
+            content = f.read()
+
+            # Concatenate the content of the current file to the combined_content string
+            combined_content += content + '\n\n'  # Adding two newlines to separate content of different files
+
+    return combined_content
+directory = 'chat_logs'
+combined_content = combine_documents(directory)
 def chatbot(messages, model="gpt-4", temperature=0):
     max_retry = 7
     retry = 0
@@ -66,7 +104,7 @@ def main():
     # instantiate chatbot
     openai.api_key = os.getenv("OPENAI_API_KEY")
     conversation = list()
-    conversation.append({'role': 'system', 'content': open_file('Relfexive_journal.md')})
+    conversation.append({'role': 'system', 'content': open_file('System_Prompts\Relfexive_journal.md')})
     user_messages = list()
     all_messages = list()
     
@@ -92,7 +130,7 @@ def main():
             results = collection.query(query_texts=[main_scratchpad], n_results=1)
             kb = results['documents'][0][0]
             #print('\n\nDEBUG: Found results %s' % results)
-        default_system = open_file('system_default.txt').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
+        default_system = open_file('System_Prompts\system_default.txt').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
         #print('SYSTEM: %s' % default_system)
         conversation[0]['content'] = default_system
 
@@ -115,7 +153,7 @@ def main():
         print('\n\nUpdating user profile...')
         profile_length = len(current_profile.split(' '))
         profile_conversation = list()
-        profile_conversation.append({'role': 'system', 'content': open_file('system_update_user_profile.txt').replace('<<UPD>>', current_profile).replace('<<WORDS>>', str(profile_length))})
+        profile_conversation.append({'role': 'system', 'content': open_file('System_Prompts\system_update_user_profile.txt').replace('<<UPD>>', current_profile).replace('<<WORDS>>', str(profile_length))})
         profile_conversation.append({'role': 'user', 'content': user_scratchpad})
         profile = chatbot(profile_conversation)
         save_file('user_profile.md', profile)
@@ -132,7 +170,7 @@ def main():
         if collection.count() == 0:
             # yay first KB!
             kb_convo = list()
-            kb_convo.append({'role': 'system', 'content': open_file('system_instantiate_new_kb.txt')})
+            kb_convo.append({'role': 'system', 'content': open_file('System_Prompts\system_instantiate_new_kb.txt')})
             kb_convo.append({'role': 'user', 'content': main_scratchpad})
             article = chatbot(kb_convo)
             new_id = str(uuid4())
@@ -145,7 +183,7 @@ def main():
             
             # Expand current KB
             kb_convo = list()
-            kb_convo.append({'role': 'system', 'content': open_file('system_update_existing_kb.txt').replace('<<KB>>', kb)})
+            kb_convo.append({'role': 'system', 'content': open_file('System_Prompts\system_update_existing_kb.txt').replace('<<KB>>', kb)})
             kb_convo.append({'role': 'user', 'content': main_scratchpad})
             article = chatbot(kb_convo)
             collection.update(ids=[kb_id],documents=[article])
@@ -156,7 +194,7 @@ def main():
             kb_len = len(article.split(' '))
             if kb_len > 1000:
                 kb_convo = list()
-                kb_convo.append({'role': 'system', 'content': open_file('system_split_kb.txt')})
+                kb_convo.append({'role': 'system', 'content': open_file('System_Prompts\system_split_kb.txt')})
                 kb_convo.append({'role': 'user', 'content': article})
                 articles = chatbot(kb_convo).split('ARTICLE 2:')
                 a1 = articles[0].replace('ARTICLE 1:', '').strip()
@@ -166,6 +204,14 @@ def main():
                 collection.add(documents=[a2],ids=[new_id])
                 save_file('db_logs/log_%s_split.txt' % time(), 'Split document %s, added %s:\n%s\n\n%s' % (kb_id, new_id, a1, a2))
         st.write(response)
-
+    st.sidebar.title("Chat Summary")
+    if st.sidebar.button('Consolidate Chat'):
+        combine_documents(directory)
+        st.sidebar.download_button(
+        label="Download Profile",
+        data=combined_content,
+        file_name=f'chat -.txt',
+        mime="text/plain"
+        )
 if __name__ == '__main__':
     main()
