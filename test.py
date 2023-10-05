@@ -1,6 +1,6 @@
 import requests
 from elevenlabs import set_api_key
-set_api_key("ea765153007ae088c23e83affa3cc8df")
+set_api_key("")
 
 
 CHUNK_SIZE = 1024
