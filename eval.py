@@ -98,7 +98,7 @@ def summarize_content(content):
         )
         # Prepare the conversation object for the chatbot
         conversation_hypothesis = [
-            {'role': 'system', 'content': open_file('summarise.md')},
+            {'role': 'system', 'content': open_file('System_Prompts\summarise.md')},
             {'role': 'user', 'content': chunk_to_summarize}
         ]
         # Call the chatbot to summarize this chunk
@@ -128,7 +128,7 @@ def main():
     # instantiate chatbot
     openai.api_key = os.getenv("OPENAI_API_KEY")
     conversation = list()
-    conversation.append({'role': 'system', 'content': open_file('system_default.txt')})
+    conversation.append({'role': 'system', 'content': open_file('System_Prompts\system_default.md')})
     user_messages = list()
     all_messages = list()
     
@@ -141,7 +141,7 @@ def main():
         
     if st.sidebar.button("analyse"):
     
-        analysis = [{'role': 'system', 'content': open_file('analysis.md')}, {'role': 'user', 'content': st.session_state.get('chat_log', '')}]
+        analysis = [{'role': 'system', 'content': open_file('System_Prompts\analysis.md')}, {'role': 'user', 'content': st.session_state.get('chat_log', '')}]
         hypothesis_report = chatbot(analysis)
 
         # Displaying the report
