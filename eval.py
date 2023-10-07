@@ -142,10 +142,18 @@ def main():
     if st.sidebar.button("analyse"):
     
         analysis = [{'role': 'system', 'content': open_file('System_Prompts\analysis.md')}, {'role': 'user', 'content': st.session_state.get('chat_log', '')}]
-        hypothesis_report = chatbot(analysis)
+        analysis = chatbot(analysis)
 
         # Displaying the report
-        st.sidebar.write(hypothesis_report)
+        st.sidebar.write(analysis)
+    
+    if st.sidebar.button("Sentiment"):
+    
+        Sentiment = [{'role': 'system', 'content': open_file('System_Prompts\Sentiment')}, {'role': 'user', 'content': st.session_state.get('chat_log', '')}]
+        Sentiment = chatbot(Sentiment)
+
+        # Displaying the report
+        st.sidebar.write(Sentiment)
 
 
 
