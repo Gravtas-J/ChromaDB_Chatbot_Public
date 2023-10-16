@@ -67,7 +67,7 @@ if __name__ == '__main__':
     # instantiate chatbot
     openai.api_key = os.getenv("OPENAI_API_KEY")
     conversation = list()
-    conversation.append({'role': 'system', 'content': open_file('Persona\system_default_v1.1.txt')})
+    conversation.append({'role': 'system', 'content': open_file('Persona\Emily_v1.1.md')})
     user_messages = list()
     all_messages = list()
     
@@ -87,13 +87,13 @@ if __name__ == '__main__':
 
 
         # search KB, update default system
-        current_profile = open_file('Profiles\user_profile.txt')
+        current_profile = open_file('user_profile.txt')
         kb = 'No KB articles yet'
         if collection.count() > 0:
             results = collection.query(query_texts=[main_scratchpad], n_results=1)
             kb = results['documents'][0][0]
             #print('\n\nDEBUG: Found results %s' % results)
-        default_system = open_file('Persona\system_default_v1.1.txt').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
+        default_system = open_file('system_default_v1.1.txt').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
         #print('SYSTEM: %s' % default_system)
         conversation[0]['content'] = default_system
 
@@ -116,10 +116,10 @@ if __name__ == '__main__':
         print('\n\nUpdating user profile...')
         profile_length = len(current_profile.split(' '))
         profile_conversation = list()
-        profile_conversation.append({'role': 'system', 'content': open_file('system_prompts\system_update_user_profile.txt').replace('<<UPD>>', current_profile).replace('<<WORDS>>', str(profile_length))})
+        profile_conversation.append({'role': 'system', 'content': open_file('system_update_user_profile.txt').replace('<<UPD>>', current_profile).replace('<<WORDS>>', str(profile_length))})
         profile_conversation.append({'role': 'user', 'content': user_scratchpad})
         profile = chatbot(profile_conversation)
-        save_file('Profiles\user_profile.txt', profile)
+        save_file('user_profile.txt', profile)
 
 
         # update main scratchpad
@@ -133,7 +133,7 @@ if __name__ == '__main__':
         if collection.count() == 0:
             # yay first KB!
             kb_convo = list()
-            kb_convo.append({'role': 'system', 'content': open_file('system_prompts\system_instantiate_new_kb.txt')})
+            kb_convo.append({'role': 'system', 'content': open_file('system_instantiate_new_kb.txt')})
             kb_convo.append({'role': 'user', 'content': main_scratchpad})
             article = chatbot(kb_convo)
             new_id = str(uuid4())
@@ -146,7 +146,7 @@ if __name__ == '__main__':
             
             # Expand current KB
             kb_convo = list()
-            kb_convo.append({'role': 'system', 'content': open_file('system_prompts\system_update_existing_kb.txt').replace('<<KB>>', kb)})
+            kb_convo.append({'role': 'system', 'content': open_file('system_update_existing_kb.txt').replace('<<KB>>', kb)})
             kb_convo.append({'role': 'user', 'content': main_scratchpad})
             article = chatbot(kb_convo)
             collection.update(ids=[kb_id],documents=[article])
@@ -157,7 +157,7 @@ if __name__ == '__main__':
             kb_len = len(article.split(' '))
             if kb_len > 1000:
                 kb_convo = list()
-                kb_convo.append({'role': 'system', 'content': open_file('system_prompts\system_split_kb.txt')})
+                kb_convo.append({'role': 'system', 'content': open_file('system_split_kb.txt')})
                 kb_convo.append({'role': 'user', 'content': article})
                 articles = chatbot(kb_convo).split('ARTICLE 2:')
                 a1 = articles[0].replace('ARTICLE 1:', '').strip()

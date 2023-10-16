@@ -124,7 +124,7 @@ def update_knowledge_base(collection, main_scratchpad, chatbot, open_file, save_
     
     # Check if the KB is empty
     if collection.count() == 0:
-        kb_convo = [{'role': 'system', 'content': open_file('system_instantiate_new_kb.txt')},
+        kb_convo = [{'role': 'system', 'content': open_file('system_prompts\\system_instantiate_new_kb.txt')},
                     {'role': 'user', 'content': main_scratchpad}]
         article = chatbot(kb_convo)
         new_id = str(uuid4())
@@ -136,7 +136,7 @@ def update_knowledge_base(collection, main_scratchpad, chatbot, open_file, save_
         kb = results['documents'][0][0]
         kb_id = results['ids'][0][0]
 
-        kb_convo = [{'role': 'system', 'content': open_file('system_update_existing_kb.txt').replace('<<KB>>', kb)},
+        kb_convo = [{'role': 'system', 'content': open_file('system_prompts\\system_update_existing_kb.txt').replace('<<KB>>', kb)},
                     {'role': 'user', 'content': main_scratchpad}]
         article = chatbot(kb_convo)
         collection.update(ids=[kb_id], documents=[article])
@@ -145,7 +145,7 @@ def update_knowledge_base(collection, main_scratchpad, chatbot, open_file, save_
         # Check if the article is too long and needs to be split
         kb_len = len(article.split(' '))
         if kb_len > 1000:
-            kb_convo = [{'role': 'system', 'content': open_file('system_split_kb.txt')},
+            kb_convo = [{'role': 'system', 'content': open_file('system_prompts\\system_split_kb.txt')},
                         {'role': 'user', 'content': article}]
             articles = chatbot(kb_convo).split('ARTICLE 2:')
             a1 = articles[0].replace('ARTICLE 1:', '').strip()
@@ -155,75 +155,75 @@ def update_knowledge_base(collection, main_scratchpad, chatbot, open_file, save_
             collection.add(documents=[a2], ids=[new_id])
             save_file(f'db_logs/log_{time()}_split.txt', f'Split document {kb_id}, added {new_id}:\n{a1}\n\n{a2}')
 
-def update_system_with_kb(collection, main_scratchpad, conversation):
-    """
-    Update the system with information from the Knowledge Base (KB) and the current user profile.
+# def update_system_with_kb(collection, main_scratchpad, conversation):
+#     """
+#     Update the system with information from the Knowledge Base (KB) and the current user profile.
     
-    Parameters:
-    - collection: Database collection object for querying KB articles.
-    - main_scratchpad: Text to be queried against the KB collection.
-    - conversation: List to hold the conversation, where the first element's 'content' key will be updated.
+#     Parameters:
+#     - collection: Database collection object for querying KB articles.
+#     - main_scratchpad: Text to be queried against the KB collection.
+#     - conversation: List to hold the conversation, where the first element's 'content' key will be updated.
     
-    Returns:
-    - None: Updates the conversation list in-place.
-    """
+#     Returns:
+#     - None: Updates the conversation list in-place.
+#     """
     
-    # Read the current user profile from a file.
-    current_profile = open_file('user_profile.txt')
+#     # Read the current user profile from a file.
+#     current_profile = open_file('user_profile.txt')
     
-    # Initialize KB as empty.
-    kb = 'No KB articles yet'
+#     # Initialize KB as empty.
+#     kb = 'No KB articles yet'
     
-    # If there are KB articles in the collection, query the main scratchpad text.
-    if collection.count() > 0:
-        results = collection.query(query_texts=[main_scratchpad], n_results=1)
-        kb = results['documents'][0][0]
-        # Uncomment the line below for debugging.
-        # print('\n\nDEBUG: Found results %s' % results)
+#     # If there are KB articles in the collection, query the main scratchpad text.
+#     if collection.count() > 0:
+#         results = collection.query(query_texts=[main_scratchpad], n_results=1)
+#         kb = results['documents'][0][0]
+#         # Uncomment the line below for debugging.
+#         # print('\n\nDEBUG: Found results %s' % results)
     
-    # Read and update the default system information.
-    default_system = open_file('Persona\Emily_v1.1.md').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
+#     # Read and update the default system information.
+#     default_system = open_file('Persona\Emily_v1.1.md').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
     
-    # Uncomment the line below for debugging.
-    # print('SYSTEM: %s' % default_system)
+#     # Uncomment the line below for debugging.
+#     # print('SYSTEM: %s' % default_system)
     
-    # Update the conversation list.
-    conversation[0]['content'] = default_system
+#     # Update the conversation list.
+#     conversation[0]['content'] = default_system
 
-def update_user_profile(current_profile, user_scratchpad, open_file, save_file, chatbot):
-    """
-    Updates the user profile by generating a conversation between system and user,
-    and then saving the new profile into a file.
+# def update_user_profile(current_profile, user_scratchpad, open_file, save_file, chatbot):
+#     """
+#     Updates the user profile by generating a conversation between system and user,
+#     and then saving the new profile into a file.
 
-    Parameters:
-    - current_profile (str): The current user profile in text form.
-    - user_scratchpad (str): User-provided content for the profile update.
-    - open_file (function): Function to open and read a file.
-    - save_file (function): Function to save content into a file.
-    - chatbot (function): Function that simulates the chatbot interaction.
+#     Parameters:
+#     - current_profile (str): The current user profile in text form.
+#     - user_scratchpad (str): User-provided content for the profile update.
+#     - open_file (function): Function to open and read a file.
+#     - save_file (function): Function to save content into a file.
+#     - chatbot (function): Function that simulates the chatbot interaction.
 
-    Returns:
-    None
-    """
-    print('\n\nUpdating user profile...')
-    # Calculate the length of the current profile in terms of words
-    profile_length = len(current_profile.split(' '))
+#     Returns:
+#     None
+#     """
+#     print('\n\nUpdating user profile...')
+#     # Calculate the length of the current profile in terms of words
+#     profile_length = len(current_profile.split(' '))
   
-    # Initialize a list to store the conversation between the system and the user
-    profile_conversation = list()
+#     # Initialize a list to store the conversation between the system and the user
+#     profile_conversation = list()
   
-    # Append system's message to the conversation
-    system_content = open_file('system_update_user_profile.txt').replace('<<UPD>>', current_profile).replace('<<WORDS>>', str(profile_length))
-    profile_conversation.append({'role': 'system', 'content': system_content})
+#     # Append system's message to the conversation
+#     system_content = open_file('system_update_user_profile.txt').replace('<<UPD>>', current_profile).replace('<<WORDS>>', str(profile_length))
+#     profile_conversation.append({'role': 'system', 'content': system_content})
   
-    # Append user's message to the conversation
-    profile_conversation.append({'role': 'user', 'content': user_scratchpad})
+#     # Append user's message to the conversation
+#     profile_conversation.append({'role': 'user', 'content': user_scratchpad})
   
-    # Generate a new profile using the chatbot function
-    profile = chatbot(profile_conversation)
+#     # Generate a new profile using the chatbot function
+#     profile = chatbot(profile_conversation)
   
-    # Save the new profile into a file
-    save_file('user_profile.txt', profile)
+#     # Save the new profile into a file
+#     save_file('user_profile.txt', profile)
 
 
 
@@ -239,7 +239,7 @@ def main():
     # instantiate chatbot
     openai.api_key = os.getenv("OPENAI_API_KEY")
     conversation = list()
-    conversation.append({'role': 'system', 'content': open_file('Persona\Emily_v1.1.md')})
+    conversation.append({'role': 'system', 'content': open_file('Persona\\Emily_v1.2.md')})
     user_messages = list()
     all_messages = list()
     
@@ -255,8 +255,15 @@ def main():
 
 
         # search KB, update default system
-        update_system_with_kb(collection, main_scratchpad, conversation)
-        current_profile = update_system_with_kb(collection, main_scratchpad, conversation)
+        current_profile = open_file('Profiles\\user_profile.txt')
+        kb = 'No KB articles yet'
+        if collection.count() > 0:
+            results = collection.query(query_texts=[main_scratchpad], n_results=1)
+            kb = results['documents'][0][0]
+            #print('\n\nDEBUG: Found results %s' % results)
+        default_system = open_file('Persona\\Emily_v1.2.md').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
+        #print('SYSTEM: %s' % default_system)
+        conversation[0]['content'] = default_system
  
 
         # generate a response
@@ -272,9 +279,14 @@ def main():
             user_messages.pop(0)
         user_scratchpad = '\n'.join(user_messages).strip()
 
-
         # update user profile
-        update_user_profile(current_profile, user_scratchpad, open_file, save_file, chatbot)
+        print('\n\nUpdating user profile...')
+        profile_length = len(current_profile.split(' '))
+        profile_conversation = list()
+        profile_conversation.append({'role': 'system', 'content': open_file('system_prompts\\system_update_user_profile.txt').replace('<<UPD>>', current_profile).replace('<<WORDS>>', str(profile_length))})
+        profile_conversation.append({'role': 'user', 'content': user_scratchpad})
+        profile = chatbot(profile_conversation)
+        save_file('user_profile.txt', profile)
 
 
         # update main scratchpad
@@ -291,4 +303,5 @@ def main():
 if __name__ == '__main__':
     main()
 
+        
         
