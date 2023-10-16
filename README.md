@@ -1,36 +1,89 @@
-# ChromaDB Chatbot
+# Persistent Chatbot README
 
-Public version of my ChromaDB chatbot that keeps track of user profile and historical topics. Should be mostly ready to go right out of the box. 
+## Overview
 
-## Setup
+This Python script integrates ChromaDB, OpenAI's GPT-4 model, and various utility functions to build a chatbot. The script demonstrates a complete flow of a conversational agent that can update and consult a Knowledge Base (KB), interact with users, and even dynamically update the system and user profiles. 
 
-1. Install chromadb and openai (in `requirements.txt` file)
-2. Update `user_profile.txt` file with your initial information
-3. Update `key_openai.txt` with your OpenAI API key
+## Dependencies
 
-## Usage
+- `chromadb`
+- `openai`
+- `yaml`
+- `dotenv`
+- `os`
+- `uuid`
+- `time`
 
-- Main chat client: `python chat.py`
-- Take a look in your KB: `python chromadb_peek.py`
+## Functions
 
-## Code Explanation
+### `save_yaml(filepath, data)`
 
-This Python script serves as the implementation of a chatbot that leverages the OpenAI's GPT-4 model. It additionally integrates the chatbot with a persistent knowledge base using the ChromaDB library. Here's an overview of how the different parts of the script function:
+Saves data into a YAML file.
 
-1. **Utility Functions**: The script starts with several utility functions to handle file operations and to interact with OpenAI's API. These include functions for saving and opening files, and a function to run the chatbot, managing retries in case of exceptions.
-2. **Main Application**: The script's main operation is contained within a continuous loop (`while True:`), enabling continuous interaction with the user. This loop does the following:
-   - **Instantiates the ChromaDB client** for persistent storage and knowledge base management.
-   - **Initiates the chatbot** by loading OpenAI's API key and preparing a conversation list.
-   - **Captures user input** and adds it to the conversation list. The input is also logged in a separate file for record-keeping.
-   - **Searches the knowledge base** for relevant content based on the current conversation and updates the chatbot's default system message accordingly.
-   - **Generates a response** from the chatbot based on the conversation so far, which includes the updated default system message and the user's input.
-   - **Updates the user profile** based on the user's recent messages, using the chatbot's response as the updated profile.
-   - **Updates the knowledge base** with the most recent conversation, either adding a new entry or updating an existing entry. If an existing entry becomes too long, it's split into two separate entries.
+### `save_file(filepath, content)`
 
-The script logs all interactions with the OpenAI API and updates to the knowledge base, providing a record of the chatbot's operations and aiding in debugging and optimization efforts. The use of the ChromaDB library allows for scalable storage and retrieval of the chatbot's knowledge base, accommodating a growing number of conversations and data points.
+Saves a string content into a file.
 
-But seriously just look at the code, it's pretty straight forward. 
+### `open_file(filepath)`
 
-## Contributing
+Opens a file and returns its content.
 
-You're welcome to submit a pull request to make mild changes or fix bugs. Any substantial refactors will be rejected. If you want to take this work and modify it, please just work on your own fork. This repo will eventually be made a public readonly archive. 
+### `chatbot(messages, model="gpt-4", temperature=0)`
+
+Generates a text-based response using OpenAI's GPT-4 model.
+
+### `get_user_input(user_messages, all_messages, conversation)`
+
+Collects user input and updates data structures storing the conversation.
+
+### `update_knowledge_base(collection, main_scratchpad, chatbot, open_file, save_file)`
+
+Updates the knowledge base stored in ChromaDB.
+
+### `update_system_with_kb(collection, main_scratchpad, conversation)`
+
+Updates the system with information from the KB and user profile.
+
+### `update_user_profile(current_profile, user_scratchpad, open_file, save_file, chatbot)`
+
+Updates the user profile by consulting the chatbot.
+
+### `main()`
+
+The main function that coordinates the entire chatbot functionality.
+
+## Environment Variables
+
+- `OPENAI_API_KEY`: Your OpenAI API Key. Make sure you have it in your `.env` file or set in the environment.
+
+## How to Run
+
+1. Make sure you have all the dependencies installed.
+2. Populate the `.env` file with your OpenAI API key.
+3. Run `python <script_name>.py` - this can be any version of the chat. 
+
+## Logging
+
+- API conversations are logged in `api_logs` directory.
+- Chat logs are stored in `chat_logs`.
+- Database logs are saved in `db_logs`.
+
+## Important Notes
+
+- Make sure you have your `.env` file in the same directory as the script or set your OpenAI API key in the environment.
+- The default path for ChromaDB is "chromadb", make sure the directory exists or specify a different path.
+
+## Future Enhancements
+
+- Implement session management to handle multiple users.
+- Add more robust error handling and logging features.
+- Include real-time updates and notifications. 
+
+## Known Issues
+
+- Token count limit might be reached if the conversation history becomes too long. The script currently removes the oldest message to handle this, but a more sophisticated approach may be needed.
+- Exception handling for API calls is limited to maximum retries.
+
+## License
+
+MIT License
