@@ -1,22 +1,14 @@
-import streamlit as st
 import chromadb
 from chromadb.config import Settings
-from pprint import pformat
+from pprint import pprint as pp
 
-def run_code():
-    persist_directory = "chromadb"
-    chroma_client = chromadb.PersistentClient(path=persist_directory)
-    collection = chroma_client.get_or_create_collection(name="knowledge_base")
 
-    output1 = f'KB presently has {collection.count()} entries'
-    output2 = '\n\nBelow are the top 10 entries:\n'
-    results = collection.peek()
-    output3 = pformat(results)
+persist_directory = "chromadb"
+chroma_client = chromadb.Client(Settings(persist_directory=persist_directory,chroma_db_impl="duckdb+parquet",))
+collection = chroma_client.get_or_create_collection(name="knowledge_base")
 
-    return f"{output1}{output2}{output3}"
 
-st.title("Chromadb GUI")
-
-if st.button("Run Code"):
-    result = run_code()
-    st.text_area("Output", result, height=200)
+print('KB presently has %s entries' % collection.count())
+print('\n\nBelow are the top 10 entries:')
+results = collection.peek()
+pp(results)

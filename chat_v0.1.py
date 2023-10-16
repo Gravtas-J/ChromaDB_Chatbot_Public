@@ -4,8 +4,9 @@ import openai
 import yaml
 from time import time, sleep
 from uuid import uuid4
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
+
 
 def save_yaml(filepath, data):
     with open(filepath, 'w', encoding='utf-8') as file:
@@ -55,16 +56,18 @@ def chatbot(messages, model="gpt-4", temperature=0):
 
 
 if __name__ == '__main__':
+    load_dotenv()
     # instantiate ChromaDB
     persist_directory = "chromadb"
+    # chroma_client = chromadb.PersistentClient(Settings(persist_directory=persist_directory,chroma_db_impl="duckdb+parquet",))
     chroma_client = chromadb.PersistentClient(path=persist_directory)
     collection = chroma_client.get_or_create_collection(name="knowledge_base")
 
-    load_dotenv()
+
     # instantiate chatbot
     openai.api_key = os.getenv("OPENAI_API_KEY")
     conversation = list()
-    conversation.append({'role': 'system', 'content': open_file('Relfexive_journal.md')})
+    conversation.append({'role': 'system', 'content': open_file('system_default.txt')})
     user_messages = list()
     all_messages = list()
     
@@ -84,7 +87,7 @@ if __name__ == '__main__':
 
 
         # search KB, update default system
-        current_profile = open_file('user_profile.md')
+        current_profile = open_file('user_profile.txt')
         kb = 'No KB articles yet'
         if collection.count() > 0:
             results = collection.query(query_texts=[main_scratchpad], n_results=1)
@@ -116,7 +119,7 @@ if __name__ == '__main__':
         profile_conversation.append({'role': 'system', 'content': open_file('system_update_user_profile.txt').replace('<<UPD>>', current_profile).replace('<<WORDS>>', str(profile_length))})
         profile_conversation.append({'role': 'user', 'content': user_scratchpad})
         profile = chatbot(profile_conversation)
-        save_file('user_profile.md', profile)
+        save_file('user_profile.txt', profile)
 
 
         # update main scratchpad
