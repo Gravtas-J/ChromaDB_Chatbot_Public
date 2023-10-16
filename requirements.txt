@@ -1,4 +1,4 @@
-openai
 chromadb
-streamlit
-dotenv
+openai
+pyyaml
+python-dotenv
