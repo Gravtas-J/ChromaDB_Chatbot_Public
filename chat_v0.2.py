@@ -67,7 +67,7 @@ if __name__ == '__main__':
     # instantiate chatbot
     openai.api_key = os.getenv("OPENAI_API_KEY")
     conversation = list()
-    conversation.append({'role': 'system', 'content': open_file('Emily.md')})
+    conversation.append({'role': 'system', 'content': open_file('Persona\Emily_v1.0.md')})
     user_messages = list()
     all_messages = list()
     
@@ -93,7 +93,7 @@ if __name__ == '__main__':
             results = collection.query(query_texts=[main_scratchpad], n_results=1)
             kb = results['documents'][0][0]
             #print('\n\nDEBUG: Found results %s' % results)
-        default_system = open_file('Emily.md').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
+        default_system = open_file('Persona\Emily_v1.0.md').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
         #print('SYSTEM: %s' % default_system)
         conversation[0]['content'] = default_system
 

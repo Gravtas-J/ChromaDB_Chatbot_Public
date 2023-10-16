@@ -183,3 +183,4 @@ user_profile.md
 chromadb/chroma.sqlite3
 notepade.txt
 notepad
+.vscode/*

@@ -182,7 +182,7 @@ def update_system_with_kb(collection, main_scratchpad, conversation):
         # print('\n\nDEBUG: Found results %s' % results)
     
     # Read and update the default system information.
-    default_system = open_file('Emily.md').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
+    default_system = open_file('Persona\Emily_v1.1.md').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
     
     # Uncomment the line below for debugging.
     # print('SYSTEM: %s' % default_system)
@@ -239,7 +239,7 @@ def main():
     # instantiate chatbot
     openai.api_key = os.getenv("OPENAI_API_KEY")
     conversation = list()
-    conversation.append({'role': 'system', 'content': open_file('Emily.md')})
+    conversation.append({'role': 'system', 'content': open_file('Persona\Emily_v1.1.md')})
     user_messages = list()
     all_messages = list()
     
