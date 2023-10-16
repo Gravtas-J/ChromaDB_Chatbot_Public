@@ -72,6 +72,7 @@ The main function that coordinates the entire chatbot functionality.
 
 - Make sure you have your `.env` file in the same directory as the script or set your OpenAI API key in the environment.
 - The default path for ChromaDB is "chromadb", make sure the directory exists or specify a different path.
+- if you wish to change the Persona of the chatbot update the defult system in def the update_system_with_kb & main (under comment instantiate chatbot) 
 
 ## Future Enhancements
 
