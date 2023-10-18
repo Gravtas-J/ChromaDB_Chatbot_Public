@@ -184,3 +184,4 @@ chromadb/chroma.sqlite3
 notepade.txt
 notepad
 .vscode/*
+v_chatlog/*
