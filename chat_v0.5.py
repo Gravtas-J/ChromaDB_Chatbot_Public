@@ -9,14 +9,23 @@ from dotenv import load_dotenv
 import streamlit as st
 
 
+
 Persona = os.path.join('persona', 'Emily_v1.2.md')
 Update_user_profile = os.path.join('system_prompts', 'system_update_user_profile.txt')
 User = os.path.join('Profiles', 'user_profile.txt')
 System_Update_KB = os.path.join('system_prompts', 'system_update_existing_kb.txt')
 System_Split_KB = os.path.join('system_prompts', 'system_split_kb.txt')
 System_Instantiate_KB = os.path.join('system_prompts', 'system_instantiate_new_kb.txt')
+portrait = os.path.join('Portrait', 'Emily.png')
+verbose_chatlog = os.path.join('v_chatlog', 'all_messages.txt')
 
+st.markdown("<h1 style='text-align: center;'>Emily</h1>", unsafe_allow_html=True)
+# Set up the Streamlit layout with three columns
+col1, col2, col3 = st.columns([1, 2, 1])  # creates 3 columns
 
+# Display an image in the center column
+with col2:  # use the center column
+    st.image(portrait, width=300) 
 
 
 def save_yaml(filepath, data):
@@ -101,7 +110,10 @@ def get_user_input(user_messages, all_messages, conversation):
     None
     """
     # Get user input
-    text = st.text_input('USER:', '')
+    text = st.text_input(
+            label="User",
+            
+            )
     
     # Append the user's message to the list of user messages
     user_messages.append(text)
@@ -205,6 +217,7 @@ def main():
     conversation.append({'role': 'system', 'content': open_file(Persona)}) #Persona\\Emily_v1.2.md
     user_messages = list()
     all_messages = list()
+    current_profile = open_file(User) #Profiles\\user_profile.txt
 
     # get user input
     get_user_input(user_messages, all_messages, conversation)
@@ -219,7 +232,7 @@ def main():
 
 
         # search KB, update default system
-        current_profile = open_file(User) #Profiles\\user_profile.txt
+        
         kb = 'No KB articles yet'
         if collection.count() > 0:
             results = collection.query(query_texts=[main_scratchpad], n_results=1)
@@ -234,8 +247,8 @@ def main():
         response = chatbot(conversation)
         save_file('chat_logs/chat_%s_chatbot.txt' % time(), response)
         conversation.append({'role': 'assistant', 'content': response})
-        all_messages.append('CHATBOT: %s' % response)
-        st.write('\n\nCHATBOT: %s' % response)
+        all_messages.append('Emily: %s' % response)
+        st.write('\n\nEmily:\n\n %s' % response)
 
 
         # update user scratchpad
@@ -255,6 +268,13 @@ def main():
         # Update the knowledge base
         print('\n\nUpdating KB...')
         update_knowledge_base(collection, main_scratchpad, chatbot, open_file, save_file)
+
+        formatted_text = '\n'.join(all_messages)
+        save_file(verbose_chatlog, formatted_text)
+        with open(verbose_chatlog, 'r', encoding='utf-8') as f:
+            content = f.read()
+        st.write(content)
+        
 
 
 if __name__ == '__main__':
