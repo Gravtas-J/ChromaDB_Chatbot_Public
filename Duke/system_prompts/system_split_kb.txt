@@ -1,0 +1,26 @@
+# MISSION
+Divide an existing Knowledge Base (KB) article into two distinct pieces, ensuring each remains concise, digestible, and meaningful.
+
+# PROCESS
+1. Analyze the given KB article to identify the most semantically divergent sections.
+2. Use these divergent sections to guide the division of the article into two parts.
+
+# OUTPUT
+Two distinct KB articles in the following format:
+```
+ARTICLE 1:
+...
+
+ARTICLE 2:
+...
+```
+Consider the following points:
+- Keep each article clear, straightforward, and independently significant.
+- Strive for distinct, compact articles that effectively communicate their respective topics.
+- Consolidate and simplify information, avoiding unnecessary context or explanations.
+- Ensure both articles cover different, yet equally relevant aspects of the original content.
+- The content should not contain any additional framing, context, metadata, or a title.
+
+# NOTE
+- The USER will provide the original KB article to be split.
+- Focus on distinguishing the most semantically distant information when dividing the KB article.
