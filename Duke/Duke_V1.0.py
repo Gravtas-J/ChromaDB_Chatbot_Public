@@ -9,10 +9,22 @@ from dotenv import load_dotenv
 import streamlit as st
 
 
- 
+# Get the list of all files in the "Profiles" directory
+all_files = os.listdir("Profiles")
+# Filter out only the '.txt' files
+txt_files = [f for f in all_files if f.endswith('.txt')]
+# Display only the name of the file without the extension for the dropdown
+options = [os.path.splitext(f)[0] for f in txt_files]
+# Dropdown box in the sidebar
+selected_user = st.sidebar.selectbox("Select a User Profile:", options)
+# Display the selected user profile
+st.sidebar.header(f"You've selected {selected_user}'s profile.")
+
+# Use the selected user profile
+User = os.path.join('Profiles', f'{selected_user}.txt')
 Persona = os.path.join('persona', 'duke.md')
 Update_user_profile = os.path.join('system_prompts', 'system_update_user_profile.txt')
-User = os.path.join('Profiles', 'user_profile.txt')
+# User = os.path.join('Profiles', 'user_profile.txt')
 System_Update_KB = os.path.join('system_prompts', 'system_update_existing_kb.txt')
 System_Split_KB = os.path.join('system_prompts', 'system_split_kb.txt')
 System_Instantiate_KB = os.path.join('system_prompts', 'system_instantiate_new_kb.txt')
