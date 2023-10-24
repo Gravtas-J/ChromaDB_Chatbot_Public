@@ -124,7 +124,7 @@ def update_knowledge_base(collection, main_scratchpad, chatbot, open_file, save_
     
     # Check if the KB is empty
     if collection.count() == 0:
-        kb_convo = [{'role': 'system', 'content': open_file('system_prompts\\system_instantiate_new_kb.txt')},
+        kb_convo = [{'role': 'system', 'content': open_file('system_prompts\\system_instantiate_new_kb.txt')},  
                     {'role': 'user', 'content': main_scratchpad}]
         article = chatbot(kb_convo)
         new_id = str(uuid4())
@@ -154,77 +154,6 @@ def update_knowledge_base(collection, main_scratchpad, chatbot, open_file, save_
             new_id = str(uuid4())
             collection.add(documents=[a2], ids=[new_id])
             save_file(f'db_logs/log_{time()}_split.txt', f'Split document {kb_id}, added {new_id}:\n{a1}\n\n{a2}')
-
-# def update_system_with_kb(collection, main_scratchpad, conversation):
-#     """
-#     Update the system with information from the Knowledge Base (KB) and the current user profile.
-    
-#     Parameters:
-#     - collection: Database collection object for querying KB articles.
-#     - main_scratchpad: Text to be queried against the KB collection.
-#     - conversation: List to hold the conversation, where the first element's 'content' key will be updated.
-    
-#     Returns:
-#     - None: Updates the conversation list in-place.
-#     """
-    
-#     # Read the current user profile from a file.
-#     current_profile = open_file('user_profile.txt')
-    
-#     # Initialize KB as empty.
-#     kb = 'No KB articles yet'
-    
-#     # If there are KB articles in the collection, query the main scratchpad text.
-#     if collection.count() > 0:
-#         results = collection.query(query_texts=[main_scratchpad], n_results=1)
-#         kb = results['documents'][0][0]
-#         # Uncomment the line below for debugging.
-#         # print('\n\nDEBUG: Found results %s' % results)
-    
-#     # Read and update the default system information.
-#     default_system = open_file('Persona\Emily_v1.1.md').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
-    
-#     # Uncomment the line below for debugging.
-#     # print('SYSTEM: %s' % default_system)
-    
-#     # Update the conversation list.
-#     conversation[0]['content'] = default_system
-
-# def update_user_profile(current_profile, user_scratchpad, open_file, save_file, chatbot):
-#     """
-#     Updates the user profile by generating a conversation between system and user,
-#     and then saving the new profile into a file.
-
-#     Parameters:
-#     - current_profile (str): The current user profile in text form.
-#     - user_scratchpad (str): User-provided content for the profile update.
-#     - open_file (function): Function to open and read a file.
-#     - save_file (function): Function to save content into a file.
-#     - chatbot (function): Function that simulates the chatbot interaction.
-
-#     Returns:
-#     None
-#     """
-#     print('\n\nUpdating user profile...')
-#     # Calculate the length of the current profile in terms of words
-#     profile_length = len(current_profile.split(' '))
-  
-#     # Initialize a list to store the conversation between the system and the user
-#     profile_conversation = list()
-  
-#     # Append system's message to the conversation
-#     system_content = open_file('system_update_user_profile.txt').replace('<<UPD>>', current_profile).replace('<<WORDS>>', str(profile_length))
-#     profile_conversation.append({'role': 'system', 'content': system_content})
-  
-#     # Append user's message to the conversation
-#     profile_conversation.append({'role': 'user', 'content': user_scratchpad})
-  
-#     # Generate a new profile using the chatbot function
-#     profile = chatbot(profile_conversation)
-  
-#     # Save the new profile into a file
-#     save_file('user_profile.txt', profile)
-
 
 
 def main():

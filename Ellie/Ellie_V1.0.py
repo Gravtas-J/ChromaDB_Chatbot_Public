@@ -97,6 +97,8 @@ def chatbot(messages, model="gpt-4", temperature=0):
             print(f'\n\nRetrying in {2 ** (retry - 1) * 5} seconds...')
             sleep(2 ** (retry - 1) * 5)
 
+
+
 def get_user_input(user_messages, all_messages, conversation):
     """
     Get input from the user and update relevant data structures.
@@ -223,8 +225,6 @@ def main():
     get_user_input(user_messages, all_messages, conversation)
     if st.button('Submit'):
 
-
-
         # update main scratchpad
         if len(all_messages) > 5:
             all_messages.pop(0)
@@ -241,7 +241,7 @@ def main():
         default_system = open_file('Persona\\Emily_v1.2.md').replace('<<PROFILE>>', current_profile).replace('<<KB>>', kb)
         #print('SYSTEM: %s' % default_system)
         conversation[0]['content'] = default_system
- 
+
 
         # generate a response
         response = chatbot(conversation)
@@ -280,5 +280,21 @@ def main():
 if __name__ == '__main__':
     main()
 
-        
+##TODO: Add a function that assigns a unique identifier to the message string each time, include the API call, db call, user input, and chatbot response in the same file.
+## ideally, this would be a yaml file with a list of dictionaries, each dictionary containing the role and content of the message.
+## the yaml file would be saved in a folder called 'conversation_logs' and the filename would be the unique identifier.
+## the unique identifier would be a uuid4 string.
+## the yaml file would be saved in the following format:
+## - role: user
+##   content: "user input"
+## - role: system
+##  content: "system response"
+## - role: api  
+##  content: "api call"
+## - role: db   
+##  content: "db call"
+## - role: chatbot
+##  content: "chatbot response"
+## the idea is to better understand the chatbot's behavior by analyzing the conversation logs.
+
         
