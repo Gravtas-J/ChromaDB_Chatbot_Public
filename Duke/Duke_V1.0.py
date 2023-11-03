@@ -22,7 +22,7 @@ st.sidebar.header(f"You've selected {selected_user}'s profile.")
 
 # Use the selected user profile
 User = os.path.join('Profiles', f'{selected_user}.txt')
-Persona = os.path.join('persona', 'duke.md')
+Persona = os.path.join('persona', 'Duke_v1.0.md')
 Update_user_profile = os.path.join('system_prompts', 'system_update_user_profile.txt')
 # User = os.path.join('Profiles', 'user_profile.txt')
 System_Update_KB = os.path.join('system_prompts', 'system_update_existing_kb.txt')

@@ -16,6 +16,7 @@ import os
 def get_txt_files_in_profiles():
     all_files = os.listdir("Profiles")
     return [f for f in all_files if f.endswith('.txt')]
+    
 
 def display_file_names_without_extension(files_list):
     return [os.path.splitext(f)[0] for f in files_list]
@@ -57,7 +58,7 @@ if create_button:
 
 
 
-Persona = os.path.join('persona', 'duke.md')
+Persona = os.path.join('persona', 'Duke_v1.0.md')
 Update_user_profile = os.path.join('system_prompts', 'system_update_user_profile.txt')
 # User = os.path.join('Profiles', 'user_profile.txt')
 System_Update_KB = os.path.join('system_prompts', 'system_update_existing_kb.txt')
